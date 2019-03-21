@@ -1,6 +1,7 @@
 #include "buffer.h"
 #include <string.h>
 #include <stdio.h>
+
 /**
  *
  * @param size
@@ -25,10 +26,10 @@ buffer_t * create_buffer(size_t size) {
  *
  * @param buf
  */
-void destroy_buffer(void ** object) {
+void destroy_buffer(buffer_t ** object) {
 	if (object && *object) {
-		if (((buffer_t *)(*object))->data) {
-			free(((buffer_t *)(*object))->data);
+		if (((*object))->data) {
+			free((void *)((*object)->data));
 		}
 		free(*object);
 		*object = NULL;

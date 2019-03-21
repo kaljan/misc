@@ -1,4 +1,4 @@
-#include <dbg.h>
+#include "dbg.h"
 
 
 #define DBG_STR_BUF_SIZE	2048
@@ -7,6 +7,7 @@
 #define __DEBUG_LOG_HEADER	F_WHITE "[" F_CYAN "%s" F_WHITE ":" F_CYAN "%d" F_WHITE "][" F_YELLOW "%s" F_WHITE "]"
 #define __DEBUG_HEADER	F_WHITE "[" F_CYAN "%s" F_WHITE ":" F_CYAN "%d" F_WHITE "]"
 #define LOG_V_COLOR			F_WHITE
+#define LOG_I_COLOR			C_BOLD F_GREEN
 #define LOG_T_COLOR			F_YELLOW
 #define LOG_D_COLOR			F_CYAN
 #define LOG_W_COLOR			C_BOLD F_YELLOW
@@ -18,12 +19,14 @@
 
 #ifdef COLORED_TERM
 static const char __debug_log_v_format[] = __DEBUG_LOG_HEADER LOG_V_COLOR " MSG: %s" C_ENDLINE;
+static const char __debug_log_i_format[] = __DEBUG_LOG_HEADER LOG_I_COLOR " INF: %s" C_ENDLINE;
 static const char __debug_log_t_format[] = __DEBUG_LOG_HEADER LOG_T_COLOR " THR: %s" C_ENDLINE;
 static const char __debug_log_d_format[] = __DEBUG_LOG_HEADER LOG_D_COLOR " DBG: %s" C_ENDLINE;
 static const char __debug_log_w_format[] = __DEBUG_LOG_HEADER LOG_W_COLOR " WRN: %s" C_ENDLINE;
 static const char __debug_log_e_format[] = __DEBUG_LOG_HEADER LOG_E_COLOR " ERR: %s" C_ENDLINE;
 
 static const char __debug_v_format[] = __DEBUG_HEADER LOG_V_COLOR " MSG: %s" C_ENDLINE ;
+static const char __debug_i_format[] = __DEBUG_HEADER LOG_I_COLOR " INF: %s" C_ENDLINE ;
 static const char __debug_t_format[] = __DEBUG_HEADER LOG_T_COLOR " THR: %s" C_ENDLINE ;
 static const char __debug_d_format[] = __DEBUG_HEADER LOG_D_COLOR " DBG: %s" C_ENDLINE ;
 static const char __debug_w_format[] = __DEBUG_HEADER LOG_W_COLOR " WRN: %s" C_ENDLINE ;
@@ -44,6 +47,7 @@ static const char __debug_e_format[] = __DEBUG_HEADER " ERR: %s" C_ENDLINE ;
 
 static const char * __debug_log_format[] = {
 	__debug_log_v_format,
+	__debug_log_i_format,
 	__debug_log_t_format,
 	__debug_log_d_format,
 	__debug_log_w_format,
@@ -53,6 +57,7 @@ static const char * __debug_log_format[] = {
 
 static const char * __debug_format[] = {
 	__debug_v_format,
+	__debug_i_format,
 	__debug_t_format,
 	__debug_d_format,
 	__debug_w_format,

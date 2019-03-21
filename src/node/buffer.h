@@ -14,7 +14,7 @@ typedef struct _buf_t {
 } buffer_t;
 
 buffer_t * create_buffer(size_t size);
-void destroy_buffer(void ** object);
+void destroy_buffer(buffer_t ** object);
 ssize_t write_buffer(buffer_t * buf, uint8_t * data, size_t size);
 ssize_t read_buffer(buffer_t * buf, uint8_t * data, size_t size);
 
