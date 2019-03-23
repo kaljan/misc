@@ -40,10 +40,11 @@
 
 
 #define LOG_LEVEL_VERBOSE	0
-#define LOG_LEVEL_THREAD	1
-#define LOG_LEVEL_DEBUG		2
-#define LOG_LEVEL_WARNING	3
-#define LOG_LEVEL_ERROR		4
+#define LOG_LEVEL_INFO		1
+#define LOG_LEVEL_THREAD	2
+#define LOG_LEVEL_DEBUG		3
+#define LOG_LEVEL_WARNING	4
+#define LOG_LEVEL_ERROR		5
 
 #define DEBOG_LOG_LEVEL		LOG_LEVEL_VERBOSE
 #define LOG_LEVEL			LOG_LEVEL_VERBOSE
@@ -53,6 +54,11 @@
 #	define mLogV(TAG, ...) __debug_log_print(LOG_LEVEL_VERBOSE, __func__, __LINE__, TAG, __VA_ARGS__)
 #	else
 #	define mLogV(TAG, ...) (void *)0
+#	endif
+#	if (DEBOG_LOG_LEVEL <= LOG_LEVEL_INFO)
+#	define mLogI(TAG, ...) __debug_log_print(LOG_LEVEL_INFO, __func__, __LINE__, TAG, __VA_ARGS__)
+#	else
+#	define mLogI(TAG, ...) (void *)0
 #	endif
 #	if (DEBOG_LOG_LEVEL <= LOG_LEVEL_THREAD)
 #	define mLogT(TAG, ...) __debug_log_print(LOG_LEVEL_THREAD, __func__, __LINE__, TAG, __VA_ARGS__)
@@ -87,6 +93,11 @@
 #	define LOGV(...) __debug_print(LOG_LEVEL_VERBOSE, __func__, __LINE__, __VA_ARGS__)
 #	else
 #	define LOGV(...) (void *)0
+#	endif
+#	if (LOG_LEVEL <= LOG_LEVEL_INFO)
+#	define LOGI(...) __debug_print(LOG_LEVEL_INFO, __func__, __LINE__, __VA_ARGS__)
+#	else
+#	define LOGI(...) (void *)0
 #	endif
 #	if (LOG_LEVEL <= LOG_LEVEL_THREAD)
 #	define LOGT(...) __debug_print(LOG_LEVEL_THREAD, __func__, __LINE__, __VA_ARGS__)
