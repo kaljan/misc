@@ -12,7 +12,7 @@ typedef struct _watchdog_t {
 	void * arg;
 } watchdog_t;
 
-watchdog_t * watchdog_create(int delay, void (*callback)(void *));
+watchdog_t * watchdog_create(int delay, void (*callback)(void *), void * arg);
 void watchdog_destroy(watchdog_t ** context);
 int watchdog_run(watchdog_t * context);
 void watchdog_abort(watchdog_t * context);

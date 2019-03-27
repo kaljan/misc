@@ -7,13 +7,12 @@
 #include <unistd.h>
 #include <string.h>
 #include <ctype.h>
-#include <dbg.h>
 #include <stdbool.h>
 #include <sys/time.h>
 #include <math.h>
 
 
-char *str_dup(const char * str);
+char * str_dup(const char * str);
 void fstrdata(char * str, uint8_t * data, size_t size);
 char * strdata(uint8_t * data, size_t size);
 void destroy(void ** object);

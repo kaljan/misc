@@ -5,8 +5,9 @@
 #include <stdio.h>
 #include <ctype.h>
 #include <stdbool.h>
-#include <math.h>
+#include <time.h>
 #include <sys/time.h>
+#include <errno.h>
 
 #define STRENUM(s) #s
 #define strbool(x) ((x) ? "true\0" : "false\0")
@@ -127,9 +128,58 @@
 #	define LOGE(...) (void *)0
 #endif
 
+#if defined (DEBOG_LOG_LEVEL)
+#	if (DEBOG_LOG_LEVEL == LOG_LEVEL_VERBOSE)
+#	define d_trace_v(TAG, ...) __trace(LOG_LEVEL_VERBOSE, get_time(), __func__, __LINE__, TAG, __VA_ARGS__)
+#	else
+#	define d_trace_v(TAG, ...) (void *)0
+#	endif
+#	if (DEBOG_LOG_LEVEL <= LOG_LEVEL_INFO)
+#	define d_trace_i(TAG, ...) __trace(LOG_LEVEL_INFO, get_time(), __func__, __LINE__, TAG, __VA_ARGS__)
+#	else
+#	define d_trace_i(TAG, ...) (void *)0
+#	endif
+#	if (DEBOG_LOG_LEVEL <= LOG_LEVEL_THREAD)
+#	define d_trace_t(TAG, ...) __trace(LOG_LEVEL_THREAD, get_time(), __func__, __LINE__, TAG, __VA_ARGS__)
+#	else
+#	define d_trace_t(TAG, ...) (void *)0
+#	endif
+#	if (DEBOG_LOG_LEVEL <= LOG_LEVEL_DEBUG)
+#	define d_trace_d(TAG, ...) __trace(LOG_LEVEL_DEBUG, get_time(), __func__, __LINE__, TAG, __VA_ARGS__)
+#	else
+#	define d_trace_d(TAG, ...) (void *)0
+#	endif
+#	if (DEBOG_LOG_LEVEL <= LOG_LEVEL_WARNING)
+#	define d_trace_w(TAG, ...) __trace(LOG_LEVEL_WARNING, get_time(), __func__, __LINE__, TAG, __VA_ARGS__)
+#	else
+#	define d_trace_w(TAG, ...) (void *)0
+#	endif
+#	if (DEBOG_LOG_LEVEL <= LOG_LEVEL_ERROR)
+#	define d_trace_e(TAG, ...) __trace(LOG_LEVEL_ERROR, get_time(), __func__, __LINE__, TAG, __VA_ARGS__)
+#	else
+#	define d_trace_e(TAG, ...) (void *)0
+#	endif
+#else
+#	define d_trace_v(TAG, ...) (void *)0
+#	define d_trace_v(TAG, ...) (void *)0
+#	define d_trace_v(TAG, ...) (void *)0
+#	define d_trace_v(TAG, ...) (void *)0
+#	define d_trace_v(TAG, ...) (void *)0
+#endif
 
+#define LOGERRNO(...) __errno_print(errno, __func__, __LINE__, __VA_ARGS__)
+#define d_trace_errno(TAG, ...) __trace_errno(errno, get_time(), __func__, __LINE__, TAG, __VA_ARGS__)
+//#define LOGDT(...) __debug_print_timed(get_time(), __func__, __LINE__, __VA_ARGS__)
+
+const char * get_time(void);
 void __debug_log_print(int level, const char * fn_name, int line, const char * tag, char const * fmt, ...);
 void __debug_print(int level, const char *fn_name, int line, const char * fmt, ...);
+void __debug_trace(int level, const char * strtime, const char *fn_name, int line, const char * fmt, ...);
+void __trace(int level, const char * strtime, const char *fn_name, int line, const char * tag, const char * fmt, ...);
+void __trace_errno(int error_no, const char * strtime, const char *fn_name,
+	int line, const char * tag, const char * fmt, ...);
+void __errno_print(int error_no, const char *fn_name, int line, const char * fmt, ...);
 double get_time_ms(struct timeval *tstart, struct timeval *tstop);
+
 
 #endif // DBGTOOLS_H

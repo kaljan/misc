@@ -182,7 +182,7 @@ int tty_port_update_settings(tty_port_t * context, _Bool nolock) {
 				ret = fcntl(context->file->f_des, F_SETFL, FNDELAY);
 			}
 		} while (0);
-		file_close(context);
+		file_close(context->file);
 	}
 	return ret;
 }
@@ -223,7 +223,7 @@ tty_port_t * serial_port_create(const char * name,
 	if (settings && (context = (tty_port_t *)malloc(sizeof(tty_port_t)))) {
 		memset(context, 0, sizeof(tty_port_t));
 		context->settings = settings;
-		if ((context->file = file_create_instance(context->settings->name)) &&
+		if ((context->file = file_create_instance(context->settings->name, false)) &&
 			(tty_port_update_settings(context, nolock) == 0)) {
 			return context;
 		}
@@ -233,7 +233,7 @@ tty_port_t * serial_port_create(const char * name,
 }
 
 int tty_port_set_listener(tty_port_t * context, _Bool (*listener)(void *, void *, size_t),
-	_Bool (*on_failed)(void *, int, const char *), void * arg) {
+	void (*on_failed)(void *, int, const char *), void * arg) {
 	int ret = -1;
 	if (context) {
 		char * thread_tag = __fstr("TREAD(%s)", context->settings->name);

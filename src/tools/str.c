@@ -2,7 +2,7 @@
 #include <stdarg.h>
 #include "str.h"
 
-char *str_dup(const char * str) {
+char * str_dup(const char * str) {
 	char *ptr = NULL;
 	if (str && strlen(str) &&
 		(ptr = malloc(strlen(str) + 1))) {

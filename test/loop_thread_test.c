@@ -1,6 +1,7 @@
 #include "lpthread.h"
 #include "test_object.h"
 #include "dlist.h"
+#include "dbg.h"
 
 typedef struct _lpthread_test_t {
 	int i;

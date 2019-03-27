@@ -1,6 +1,5 @@
 #include "rnd.h"
 
-
 void initrand(void) {
 	struct timeval t;
 	if (gettimeofday(&t, NULL) != 0) {

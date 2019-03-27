@@ -1,5 +1,7 @@
 #include "buffer.h"
 #include "str.h"
+#include "rnd.h"
+#include "dbg.h"
 
 extern void sha256(const uint8_t *data, size_t size, uint8_t *md);
 

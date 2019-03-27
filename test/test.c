@@ -11,6 +11,8 @@ extern int list_test(void);
 extern int test_buffer(void);
 #elif defined LOOP_THREAD_TEST
 extern int loop_thread_test(void);
+#elif defined NET_TEST
+int net_test(int argc, char ** argv);
 #else
 #	warning "Test type is not defined"
 #endif
@@ -26,6 +28,8 @@ int main(int argc, char ** argv) {
 	return test_buffer();
 #elif defined LOOP_THREAD_TEST
 	return loop_thread_test();
+#elif defined NET_TEST
+	return net_test(argc, argv);
 #else
 	return 0;
 #endif

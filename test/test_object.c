@@ -1,5 +1,5 @@
 #include "test_object.h"
-
+#include "dbg.h"
 
 test_object_t * create_test_object(int id) {
 	test_object_t * object = malloc(sizeof(test_object_t));

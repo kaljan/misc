@@ -78,7 +78,7 @@ void serial_port_destroy(tty_port_t ** context);
 tty_port_t * serial_port_create(const char * name,
 	tty_settings_t * settings, _Bool nolock);
 int tty_port_set_listener(tty_port_t * context, _Bool (*listener)(void *, void *, size_t),
-	_Bool (*on_failed)(void *, int, const char *), void * arg);
+	void (*on_failed)(void *, int, const char *), void * arg);
 int tty_port_run(tty_port_t * context);
 void tty_port_abort(tty_port_t * context);
 int serial_port_open(tty_port_t * context);

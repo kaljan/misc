@@ -12,7 +12,7 @@ _Bool watchdog_callback(void *arg) {
 			return true;
 		}
 		if (context->callback) {
-			context->callback();
+			context->callback(context->arg);
 		}
 	}
 	return false;

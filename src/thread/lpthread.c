@@ -1,4 +1,5 @@
 #include "lpthread.h"
+#include "dbg.h"
 
 void *lpthread_routine(void * arg) {
 	LOGT("pthread routine start");

@@ -1,5 +1,5 @@
 #include "file.h"
-#include "string.h"
+#include "str.h"
 
 char * f_split(const char * pathname, char ** path) {
 	if (pathname && strlen(pathname) > 0) {
@@ -17,6 +17,34 @@ char * f_split(const char * pathname, char ** path) {
 	return NULL;
 }
 
+static inline _Bool file_verify(iofs_mode_t mode) {
+	if ((mode == IOFS_REG) && (mode == IOFS_FIFO) &&
+		(mode == IOFS_CHR) && (mode == IOFS_BLK)) {
+		return true;
+	}
+	return false;
+}
+
+file_t * file_create_instance(const char * pathname, _Bool create) {
+	file_t * instance = NULL;
+	LOGD("Create file instance");
+	if (file_verify(iofs_get_mode(pathname)) &&
+		(instance = (file_t *)malloc(sizeof(file_t)))) {
+		memset((void *)instance, 0, sizeof(file_t));
+		instance->f_name = f_split(pathname, &instance->f_path);
+		instance->f_pathname = str_dup(pathname);
+		instance->f_des = -1;
+		LOGI("Success!");
+		LOGD("File name: %s", instance->f_name);
+		LOGD("File path: %s", instance->f_path);
+		LOGD("File p+n : %s", instance->f_pathname);
+		return instance;
+	}
+	LOGE("Failed to create file instance");
+
+	return instance;
+}
+
 void file_destroy_instance(file_t ** instance) {
 	if (instance && * instance) {
 		destroy((void **)(&(*instance)->f_name));
@@ -28,27 +56,23 @@ void file_destroy_instance(file_t ** instance) {
 	}
 }
 
-file_t * file_create_instance(const char * pathname) {
-	file_t * instance = NULL;
-	struct stat f_stat;
-	LOGD("stat file \"%s\"", pathname);
-	if (stat(pathname, &f_stat) == 0) {
-		LOGD("Create file instance");
-		if ((instance = (file_t *)malloc(sizeof(file_t)))) {
-			memset((void *)instance, 0, sizeof(file_t));
-			instance->f_name = f_split(pathname, &instance->f_path);
-			instance->f_pathname = str_dup(pathname);
-			instance->f_des = -1;
-			LOGI("Success!");
-			LOGD("File name: %s", instance->f_name);
-			LOGD("File path: %s", instance->f_path);
-			LOGD("File p+n : %s", instance->f_pathname);
-			return instance;
-		}
-		LOGE("Failed to create file instance");
+iofs_item_t * iofs_set_file(const char * pathname, _Bool create) {
+	iofs_item_t * item = NULL;
+	file_t * file = file_create_instance(pathname, create);
+	if (file && (item = iofs_create_item(pathname))) {
+		item->i_object = (void *)file;
+		return item;
 	}
+	iofs_destroy_item(&item);
+	file_destroy_instance(&file);
+	return item;
+}
 
-	return instance;
+file_t * iofs_get_file(iofs_item_t * item) {
+	if (item && (item->i_mode == IOFS_REG)) {
+		return (file_t *)item->i_object;
+	}
+	return NULL;
 }
 
 int file_open(file_t * instance) {
@@ -97,11 +121,10 @@ ssize_t file_read(file_t * instance, uint8_t * data, size_t size) {
 	return bytes;
 }
 
-ssize_t file_write(file_t * instance, uint8_t * data, size_t size) {
+ssize_t file_write(file_t * instance, const void * data, size_t size) {
 	ssize_t bytes;
 	if (instance) {
-		if ((bytes = write(instance->f_des,
-			(const void *)data, size)) < 0) {
+		if ((bytes = write(instance->f_des, data, size)) < 0) {
 			LOGE("Failed to read file \"%s\"; ERROR(%d) %s",
 				instance->f_pathname, errno, strerror(errno));
 			instance->error_no = errno;
